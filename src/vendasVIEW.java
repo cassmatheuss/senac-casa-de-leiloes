@@ -135,7 +135,25 @@ public class vendasVIEW extends javax.swing.JFrame {
     }
     
     private void listarProdutosVendidos() {
-        
+        try {
+            ProdutosDAO produtosdao = new ProdutosDAO();
+            
+            DefaultTableModel model = (DefaultTableModel) tabelaVendas.getModel();
+            model.setNumRows(0);
+            
+            ArrayList<ProdutosDTO> produtosVendidos = produtosdao.listarProdutosVendidos();
+            
+            for (ProdutosDTO produto : produtosVendidos) {
+                model.addRow(new Object[]{
+                    produto.getId(),
+                    produto.getNome(),
+                    produto.getValor(),
+                    produto.getStatus()
+                });
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro ao listar produtos vendidos");
+        }
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
