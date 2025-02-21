@@ -109,6 +109,41 @@ public class ProdutosDAO {
             JOptionPane.showMessageDialog(null, "Erro ao conectar ao banco de dados.");
         }
 }
+    public ArrayList<ProdutosDTO> listarProdutosVendidos() {
+        conn = new conectaDAO().connectDB();
+        ArrayList<ProdutosDTO> produtosVendidos = new ArrayList<>();
+
+        if (conn != null) {
+            try {
+                String sql = "SELECT * FROM produtos WHERE status = 'Vendido'";
+                prep = conn.prepareStatement(sql);
+                resultset = prep.executeQuery();
+
+                while (resultset.next()) {
+                    ProdutosDTO produto = new ProdutosDTO();
+                    produto.setId(resultset.getInt("id"));
+                    produto.setNome(resultset.getString("nome"));
+                    produto.setValor(resultset.getInt("valor"));
+                    produto.setStatus(resultset.getString("status"));
+                    produtosVendidos.add(produto);
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Erro ao listar produtos vendidos: " + e.getMessage());
+            } finally {
+                try {
+                    if (resultset != null) resultset.close();
+                    if (prep != null) prep.close();
+                    if (conn != null) conn.close();
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Erro ao fechar conexão: " + e.getMessage());
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Erro ao conectar ao banco de dados.");
+        }
+
+        return produtosVendidos;
+}
     
         
 }
